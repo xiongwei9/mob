@@ -13,7 +13,7 @@ class DependencyManager {
    */
   private store: Record<string, Dependency> = {};
 
-  private nowObserver: null | (() => void) = null;
+  private nowObserver: Watcher = null;
   private nowTarget: Target = null;
   private observerStack: Array<() => void> = [];
   private targetStack: Array<Target> = [];

@@ -55,13 +55,22 @@ class Observable<T> {
   }
 
   private wrapValue(v: T) {
-    if (Array.isArray(v)) {
+    if (v === null) {
+      return v;
+    }
+    if (Array.isArray(v) || typeof v === "object") {
       const p = new Proxy(v, {
-        set: (t, key, value, receiver) => {
-          Reflect.set(t, key, value, receiver);
-          if (key !== "length") {
+        set: (target, key, value, receiver) => {
+          Reflect.set(target, key, value, receiver);
+          // 数组push/pop操作后，length会被，因此这里会触发2次set
+          if (!Array.isArray(v) || key !== "length") {
             dependencyManager.trigger(this.obID);
           }
+          return true;
+        },
+        deleteProperty: (target, key) => {
+          Reflect.deleteProperty(target, key);
+          dependencyManager.trigger(this.obID);
           return true;
         },
       });
