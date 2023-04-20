@@ -1,4 +1,4 @@
-import { dependencyManager } from "./dependency_manager";
+import { dependencyManager } from "./dependencyManager";
 
 function autorun(handler: () => void) {
   dependencyManager.beginCollect(handler, null);

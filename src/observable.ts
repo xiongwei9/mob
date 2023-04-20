@@ -1,17 +1,7 @@
-import { dependencyManager } from "./dependency_manager";
+import { globalState } from "./global";
+import { dependencyManager } from "./dependencyManager";
 
-/**
- * 创建observable
- * 遍历对象的属性，将其封装成observable属性
- */
-function makeObservable<T extends object>(target: T): T {
-  for (const name of Reflect.ownKeys(target)) {
-    Reflect.defineProperty(target, name, observable(target, name));
-  }
-  return target;
-}
-
-//
+// 返回observable的字段描述
 function observable<T extends object, U extends keyof T>(
   target: T,
   name: string | symbol
@@ -30,10 +20,6 @@ function observable<T extends object, U extends keyof T>(
   };
   return descriptor;
 }
-
-const globalState = {
-  obIDCounter: 0,
-};
 
 class Observable<T> {
   private obID = "";
@@ -80,4 +66,4 @@ class Observable<T> {
   }
 }
 
-export { makeObservable };
+export { observable };
